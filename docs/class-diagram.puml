@@ -1,0 +1,61 @@
+@startuml
+skinparam monochrome true
+
+package "ACME.OOP.SCM" {
+class "Supplier" as Supplier {
++SupplierId: SupplierId {readonly}
++Name: string {readonly}
++Address: Address {readonly}
+}
+class "SupplierId" as SupplierId {
++Id: string {readonly}
+}
+Supplier "1" --> "1" SupplierId : relates to
+}
+package "ACME.OOP.Procurement" {
+class "PurchaseOrder" as PO {
++OrderNumber: string {readonly}
++SupplierId: SupplierId {readonly}
++OrderDate: DateTime {readonly}
++Currency: string {readonly}
+--
++AddItem(productId: ProductId, quantity: int, unitPriceAmount: decimal): void
++CalculateTotal(): Money
+}
+class "PurchaseOrderItem" as POItem {
++ProductId: ProductId {readonly}
++Quantity: int {readonly}
++UnitPrice: Money {readonly}
+--
++CalculateSubtotal(): Money
+}
+class "ProductId" as ProductId {
++Id: Guid {readonly}
+--
++New(): ProductId
+}
+PO "1" --> "*" POItem : contains
+POItem "1" --> "1" ProductId : relates to
+PO "1" --> "1" SupplierId : relates to
+}
+
+package "ACME.OOP.Shared" {
+class "Money" as Money {
++Amount: decimal {readonly}
++Currency: string {readonly}
+--
++Add(money: Money): Money
+}
+class "Address" as Address {
++Street: string {readonly}
++Number: string {readonly}
++City: string {readonly}
++StateOrRegion: string {readonly}
++PostalCode: string {readonly}
++Country: string {readonly}
+}
+
+POItem "1" --> "1" Money : relates to
+Supplier "1" --> "1" Address : relates to
+}
+@enduml
